@@ -54,7 +54,7 @@
             case "LogOut":
                 session_unset();
                 session_Destroy();
-                $_Page = "home";
+                $_Page = "Login";
                 break;
         }
         $_Data['page'] = $_Page;
@@ -150,7 +150,6 @@
     function showContent($_Data)
     {
         //A switch case to decide on which content to show according to the correct page
-        var_dump($_Data);
         switch ($_Data['page'])
         {
             case 'home':

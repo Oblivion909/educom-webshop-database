@@ -7,7 +7,6 @@
     function ShowLoginMessage()
     {
         //Message for Login screen
-        var_dump ($_SESSION["LoggedIn"]);
         echo
         '
             <p class="pLoginmessage"> Please enter login credentials below.</p>

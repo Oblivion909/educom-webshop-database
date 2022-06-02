@@ -1,70 +1,81 @@
 <?php
-    //include 'userservice.php';
     // Validate every form in this script
+    
+    
 
     function validateLoginForm()
     {
+        $_dbServerName = "127.0.0.1";
+        $_dbUserName = "WebShopUser";
+        $_dbPassWord = "AHiREcdCBG*PfxTy";
+        $_dbName = "stans_webshop";
+        
+        $_Conn = new mysqli($_dbServerName, $_dbUserName, $_dbPassWord, $_dbName);
+        
+        if (!$_Conn)
+        {
+            die ("Connection failed" . $_Conn->connect_error());
+        }    
+        $sql = "SELECT Email FROM users";
+        $result = mysqli_query($_Conn, $sql);
+        
+        
+        //Validate the login form which will happen once the user logs in.
+        
         $_LoginPassword = $_LoginUser =  $_LoginEmail =""; 
         $_LoginPasswordError =  $_LoginEmailError =""; 
         $_FoundPassword = "";
         $_RegisterError = "";
         $_LoginValid = false;
             
-        $_MyFile = fopen("users.txt", "r") or die ("Cannot open file");  
-        $_String = fgets($_MyFile);
-        
-        
+       
         //If the client submits the form, this checks if all the input fields are filled in and gives them te correct values
-            $_LoginPassword = testInput(getPostVar("LoginPassword"));
-            $_LoginEmail = testInput(getPostVar("LoginEmail"));
+        $_LoginPassword = testInput(getPostVar("LoginPassword"));
+        $_LoginEmail = testInput(getPostVar("LoginEmail"));
             
-            //These if statements put the correct error message that is required if the field is not entered (correctly)
-            if(empty($_LoginPassword))
+        //These if statements put the correct error message that is required if the field is not entered (correctly)
+        if(empty($_LoginPassword))
+        {
+            $_LoginPasswordError = "Password is required";
+        }
+        if(empty($_LoginEmail))
+        {
+            $_LoginEmailError = "Email is required";
+        }
+        elseif(!filter_var($_LoginEmail, FILTER_VALIDATE_EMAIL))
+        {
+            $_LoginEmailError= "Invalid email format";
+        }
+        else
+        {
+            $_Select = mysqli_query($_Conn, "SELECT * FROM users WHERE Email = '". $_LoginEmail ."'");
+            
+            if(mysqli_num_rows($_Select))
             {
-                $_LoginPasswordError = "Password is required";
+                $_Findpassword = "SELECT Password FROM users WHERE Email = '". $_LoginEmail ."'";
+                
+                $_Result = mysqli_query($_Conn, $_Findpassword);
+                
+                $_Row = mysqli_fetch_assoc($_Result);
+                
+                var_dump($_Row['Password']);
+                
+                if($_Row['Password'] != $_LoginPassword)
+                {
+                    $_LoginPasswordError = "Passwords do not match";
+                }
             }
-            if(empty($_LoginEmail))
-            {
-                $_LoginEmailError = "Email is required";
-            }
-            elseif(!filter_var($_LoginEmail, FILTER_VALIDATE_EMAIL))
-            {
-                $_LoginEmailError= "Invalid email format";
-            }   
             else
             {
-                while(!feof($_MyFile))
-                {
-                    $_String = fgets($_MyFile);
-                    $_StringParts = explode('|', $_String);
-
-                    if($_LoginEmail == $_StringParts[0])
-                    {
-                        var_dump("Ik word herkent");
-                        $_FoundPassword = trim($_StringParts[2]);
-                        $_LoginUser = $_StringParts[1];
-                        if($_FoundPassword == "")
-                        {
-                            $_LoginEmailError = "Email is not recognised";
-                        }
-                        if($_FoundPassword != $_LoginPassword)
-                        {
-                            $_LoginPasswordError = "Password does not match";                
-                        }
-                        break;
-                    }
-                    elseif(feof($_MyFile) && $_LoginEmail != $_StringParts[0])
-                    {
-                        $_LoginEmailError = "Email is not recognised";
-                    }
-                }
-                fclose($_MyFile);
+                $_LoginEmailError = "Email is not recognised";
             }
-            //This if statement makes the form invalid if one of the errors is active.
-            if(empty ($_LoginPasswordError)&& empty ($_LoginEmailError))
-            {
-                $_LoginValid = true;
-            }
+        }            
+        
+        //This if statement makes the form invalid if one of the errors is active.
+        if(empty ($_LoginPasswordError)&& empty ($_LoginEmailError))
+        {
+            $_LoginValid = true;
+        }
             
         if ($_LoginValid == true)
         {
@@ -78,13 +89,27 @@
     
     function validateRegisterForm()
     {
+        $_dbServerName = "127.0.0.1";
+        $_dbUserName = "WebShopUser";
+        $_dbPassWord = "AHiREcdCBG*PfxTy";
+        $_dbName = "stans_webshop";
+        
+        $_Conn = new mysqli($_dbServerName, $_dbUserName, $_dbPassWord, $_dbName);
+        
+        if (!$_Conn)
+        {
+            die ("Connection failed" . $_Conn->connect_error());
+        }    
+        $sql = "SELECT Email FROM users";
+        $result = mysqli_query($_Conn, $sql);
+        //Validate the Register form which will happen once the user register his account.
+
         $_Name = $_Password = $_ScndPassword=  $_Email =""; 
         $_NameError = $_PasswordError = $_ScndPasswordError=  $_EmailError =""; 
         $_Valid = false;
+        $results = [];
         
-        
-        $_MyFile = fopen("users.txt", "r") or die ("Cannot open file");
-            
+                    
         //If the client submits the form, this checks if all the input fields are filled in and gives them te correct values
         $_Email = testInput(getPostVar("EnteredEmail"));
         $_Name = testInput(getPostVar("UserName"));
@@ -104,17 +129,7 @@
         {
             $_ScndPasswordError = "Passwords do not match";
         }
-        while(!feof($_MyFile))
-        {
-            $_String = fgets($_MyFile);
-            $_Parts = explode('|', $_String);
-                
-            if ($_Email == $_Parts[0])
-            {
-                $_EmailError = "Email is already in use";
-            }
-        }
-        fclose($_MyFile);
+       
         if(empty($_Email))
         {
             $_EmailError = "Email is required";
@@ -122,6 +137,16 @@
         elseif(!filter_var($_Email, FILTER_VALIDATE_EMAIL))
         {
             $_EmailError= "Invalid email format";
+        }
+        else
+        {
+            $select = mysqli_query($_Conn, "SELECT * FROM users WHERE Email = '". $_Email ."'");
+            
+            if(mysqli_num_rows($select))
+            {
+                //Email already exists
+                $_EmailError= "Email is already in use";
+            }
         }
         if(empty($_Name))
         {
@@ -144,6 +169,8 @@
     }
     function validateContactForm()
     {
+        //Validate the Contact form which will happen once the user fills in the form and submits it.
+
         $_GenderError= $_NameError= $_EmailError= $_NumberEnteredError= $_CommentError= $_CommunicationError= "";
         $_Gender= $_Name= $_Email= $_NumberEntered= $_Comment= $_CommunicationInput= "";
         $_Valid = false;
@@ -205,5 +232,5 @@
         "_Message" => $_Comment, "_CommentError" => $_CommentError, "_Communication" => $_CommunicationInput, "_CommunicationError" => $_CommunicationError,
         "Valid" => $_Valid);
     }
-    
+   
 ?>
