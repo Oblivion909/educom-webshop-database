@@ -25,10 +25,10 @@
             case "Login":
                 require_once('Login.php');
                 require_once('validations.php');
+                require_once('sessionmanager.php');
                 $_Data = validateLoginForm();
                 if($_Data['Valid'])
                 {
-                    $_SESSION['UserName'] = $_Data['UserName'];
                     $_Page = "home";
                 }
                 break;
@@ -58,6 +58,18 @@
                 break;
         }
         $_Data['page'] = $_Page;
+        $_Data['menu'] = array("home" => "Home", "about" => "About", "contact" => "Contact" );
+        
+        if(isset($_SESSION["LoggedIn"]))
+        {
+            $_Data['menu']["LogOut"] = "Log out" . getLoggedInUser();
+        }
+        else 
+        {
+            $_Data['menu']["LogIn"] = "Log in";
+            $_Data['menu']["Register"] = "Register";
+        }
+        
         return $_Data;
     }
     
@@ -108,42 +120,32 @@
             </ul>
         ';
     }
-    function showMenuLoggedIn()
+    function showMenu($_Data)
     {
+        require_once('sessionmanager.php');
+        
         echo '<ul class="LinkList">';
             showMenuItem("home", "Home");
             showMenuItem("about", "About");
             showMenuItem("contact", "Contact");
-            showMenuItem("LogOut", "Log out " . $_SESSION['UserName']);
-        echo '</ul>';
-    }
-    
-    function showMenuLoggedOut()
-    {
-        
-        echo '<body>';
-      
-            echo '<ul class="LinkList">';
-                showMenuItem("home", "Home");
-                showMenuItem("about", "About");
-                showMenuItem("contact", "Contact");
+            
+            if(isUserLoggedIn())
+            {
+                showMenuItem("LogOut", "Log out " . getLoggedInUser());
+            }
+            else 
+            {
                 showMenuItem("Login", "Log in");
                 showMenuItem("Register", "Register");
-            echo '</ul>';
-       
+            }
+        echo '</ul>';
     }
+  
     function showBody($_Data)
     {
         echo ' <div id="PageContainer"> ';
         //Shows the standard body of the HTML pages
-        if(isset($_SESSION["LoggedIn"]))
-        {
-            showMenuLoggedIn();
-        }
-        else
-        {
-            showMenuLoggedOut();
-        }
+        showMenu($_Data);
         showContent($_Data);
         showFooter();
     }

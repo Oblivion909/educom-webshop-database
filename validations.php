@@ -79,7 +79,7 @@
             
         if ($_LoginValid == true)
         {
-            $_SESSION["LoggedIn"] = true;
+            doLoginUser($_LoginUser);
         }
        
         return array ("LoginPassword" => $_LoginPassword, "LoginPasswordError" => $_LoginPasswordError, "UserName" => $_LoginUser,
