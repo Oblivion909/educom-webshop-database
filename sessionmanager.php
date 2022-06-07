@@ -20,7 +20,6 @@
     {
         //unsets the session login status and name.
         unset($_SESSION['LoggedIn']);
-        unset($_SESSION['UserName']);
-        
+        unset($_SESSION['UserName']);   
     }
 ?>
