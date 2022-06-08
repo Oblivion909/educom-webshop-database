@@ -58,7 +58,7 @@
                 break;
         }
         $_Data['page'] = $_Page;
-        $_Data['menu'] = array("home" => "Home", "about" => "About", "contact" => "Contact" );
+        $_Data['menu'] = array("home" => "Home", "about" => "About", "contact" => "Contact", "webshop" => "Webshop" );
         
         if(isset($_SESSION["LoggedIn"]))
         {
@@ -112,7 +112,6 @@
     }
     function showMenuItem($_Link, $_Label)
     {
-        
         echo
         '
             <ul class="LinkList"> 
@@ -128,6 +127,7 @@
             showMenuItem("home", "Home");
             showMenuItem("about", "About");
             showMenuItem("contact", "Contact");
+            showMenuItem("webshop", "Webshop");
             
             if(isUserLoggedIn())
             {
@@ -178,6 +178,11 @@
                 require_once('Register.php');
                 showRegisterHeader();
                 showRegisterForm($_Data);
+                break; 
+            case 'webshop':
+                require_once('webshop.php');
+                showWebshopHeader();
+                showWebshopContent($_Data);
                 break;
             case 'Thanks':
                 require_once('contact.php');

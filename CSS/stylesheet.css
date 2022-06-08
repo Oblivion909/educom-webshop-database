@@ -87,3 +87,7 @@ textarea
 {
     vertical-align:       top;
 }
+Img
+{
+    max-width:           120px;
+}
