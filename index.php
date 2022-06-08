@@ -184,6 +184,10 @@
                 showWebshopHeader();
                 showWebshopContent($_Data);
                 break;
+            case 'detail':
+                require_once('webshop.php');
+                showDetailedPage($_Data);
+                break;
             case 'Thanks':
                 require_once('contact.php');
                 showContactThanks($_Data);
