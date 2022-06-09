@@ -56,12 +56,15 @@
                 session_Destroy();
                 $_Page = "Login";
                 break;
+           
+                
         }
         $_Data['page'] = $_Page;
         $_Data['menu'] = array("home" => "Home", "about" => "About", "contact" => "Contact", "webshop" => "Webshop" );
         
         if(isset($_SESSION["LoggedIn"]))
         {
+            require_once('sessionmanager.php');
             $_Data['menu']["LogOut"] = "Log out" . getLoggedInUser();
         }
         else 
@@ -132,6 +135,7 @@
             if(isUserLoggedIn())
             {
                 showMenuItem("LogOut", "Log out " . getLoggedInUser());
+                showMenuItem("shoppingcart", "Shopping cart");
             }
             else 
             {
@@ -187,6 +191,11 @@
             case 'detail':
                 require_once('webshop.php');
                 showDetailedPage($_Data);
+                break;
+            case 'shoppingcart':
+                require_once('shoppingcart.php');
+                showCartHeader();
+                showCartContent($_Data);
                 break;
             case 'Thanks':
                 require_once('contact.php');

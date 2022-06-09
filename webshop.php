@@ -31,7 +31,20 @@
 				</ul>
 			';
 			
-			echo '<Img src="Images/'. $rows['Filename'].'">' . "<br>";
+			echo '<Img src="Images/'. $rows['Filename'].'">' . "<br><br>";
+
+			if (isset($_SESSION['LoggedIn']))
+			{
+				echo 
+				'
+					<form method="post" action="index.php?page=webshop">
+		
+						<input type="hidden" name ="page" value="webshop">
+						<input type="submit" value="Add to cart">
+					</form>
+				';
+				echo "<br>";
+			}
 		}
 	}
 	function showDetailedPage($_Data)
@@ -57,7 +70,6 @@
 		echo '<div class="BigImages">';
 		switch($_Id)
 		{
-			
 			case "1":
 			
 				$_ProductToDisplay = mysqli_query($_Conn, "SELECT * FROM products WHERE Id = 1");
@@ -68,7 +80,7 @@
 					echo $rows['Price'] . "<br>";
 					echo $rows['Name'] . "<br>";
 			
-					echo '<Img src="Images/'. $rows['Filename'].'"width="360" height="230" >' . "<br>";
+					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br><br>";
 				}
 				break;
 				case "2":
@@ -81,7 +93,7 @@
 					echo $rows['Price'] . "<br>";
 					echo $rows['Name'] . "<br>";
 			
-					echo '<Img src="Images/'. $rows['Filename'].'" alt="" width="360" height="230" >' . "<br>";
+					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br><br>";
 				}
 				break;
 				case "3":
@@ -94,7 +106,7 @@
 					echo $rows['Price'] . "<br>";
 					echo $rows['Name'] . "<br>";
 			
-					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br>";
+					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br><br>";
 				}
 				break;
 				case "4":
@@ -107,7 +119,7 @@
 					echo $rows['Price'] . "<br>";
 					echo $rows['Name'] . "<br>";
 			
-					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br>";
+					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br><br>";
 				}
 				break;
 				case "5":
@@ -120,11 +132,24 @@
 					echo $rows['Price'] . "<br>";
 					echo $rows['Name'] . "<br>";
 			
-					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br>";
+					echo '<Img src="Images/'. $rows['Filename'].'">' . "<br><br>";
 				}
 				break;
 			echo '</div>';
 		}
-		echo "Hello";
+
+		if (isset($_SESSION['LoggedIn']))
+		{
+			echo 
+			'
+				<form method="post" action="index.php?page=webshop">
+		
+					<input type="hidden" name ="page" value="webshop">
+					<input type="submit" value="Add to cart">
+				</form>
+			';
+		}
 	}
+
+	
 ?>
