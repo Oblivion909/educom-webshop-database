@@ -74,7 +74,7 @@ label.MarginForAllingment
     /* Used to allign the textboxes  with eachother*/
     display:              inline-block;
     width:                120px;
-    text-align:           center-left;
+    text-align:           left;
 }
 .pmessage
 {
@@ -100,5 +100,10 @@ textarea
 }
 Img
 {
-    max-width:           120px;
+    width:           20%;
+}
+div.BigImages img
+{
+    height: 230px;
+    width: 360px;
 }
